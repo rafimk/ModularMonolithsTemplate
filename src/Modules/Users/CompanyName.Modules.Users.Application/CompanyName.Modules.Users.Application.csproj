@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\CompanyName.Common.Application\CompanyName.Common.Application.csproj" />
+    <ProjectReference Include="..\CompanyName.Modules.Users.Domain\CompanyName.Modules.Users.Domain.csproj" />
+    <ProjectReference Include="..\CompanyName.Modules.Users.IntegrationEvents\CompanyName.Modules.Users.IntegrationEvents.csproj" />
+  </ItemGroup>
+
+</Project>

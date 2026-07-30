@@ -1,0 +1,19 @@
+{
+  "Users": {
+    "Outbox": {
+      "IntervalInSeconds": 5,
+      "BatchSize": 20
+    },
+    "Inbox": {
+      "IntervalInSeconds": 5,
+      "BatchSize": 20
+    },
+    "KeyCloak": {
+      "AdminUrl": "http://CompanyName.identity:8080/admin/realms/CompanyName/",
+      "TokenUrl": "http://CompanyName.identity:8080/realms/CompanyName/protocol/openid-connect/token",
+      "ConfidentialClientId": "CompanyName-confidential-client",
+      "ConfidentialClientSecret": "PzotcrvZRF9BHCKcUxdKfHWlIPECG49k",
+      "PublicClientId": "CompanyName-public-client"
+    }
+  }
+}

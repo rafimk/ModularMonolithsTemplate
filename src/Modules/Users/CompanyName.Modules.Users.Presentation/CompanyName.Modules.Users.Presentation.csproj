@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\CompanyName.Common.Infrastructure\CompanyName.Common.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\Common\CompanyName.Common.Presentation\CompanyName.Common.Presentation.csproj" />
+    <ProjectReference Include="..\CompanyName.Modules.Users.Application\CompanyName.Modules.Users.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<InternalsVisibleTo Include="CompanyName.Modules.Users.IntegrationTests" />
+  </ItemGroup>
+
+</Project>
