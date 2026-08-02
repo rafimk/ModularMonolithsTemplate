@@ -29,7 +29,7 @@ internal sealed class ProcessInboxJob(
         logger.LogInformation("{Module} - Beginning to process inbox messages", ModuleName);
 
         await using DbConnection connection = await dbConnectionFactory.OpenConnectionAsync();
-        await using DbTransaction transaction = await connection.BeginTransactionAsync();
+        await using DbTransaction transaction = await connection.BeginTransactionAsync(context.CancellationToken);
 
         IReadOnlyList<InboxMessageResponse> inboxMessages = await GetInboxMessagesAsync(connection, transaction);
 
@@ -69,7 +69,7 @@ internal sealed class ProcessInboxJob(
             await UpdateInboxMessageAsync(connection, transaction, inboxMessage, exception);
         }
 
-        await transaction.CommitAsync();
+        await transaction.CommitAsync(context.CancellationToken);
 
         logger.LogInformation("{Module} - Completed processing inbox messages", ModuleName);
     }
@@ -86,12 +86,13 @@ internal sealed class ProcessInboxJob(
              FROM users.inbox_messages
              WHERE processed_on_utc IS NULL
              ORDER BY occurred_on_utc
-             LIMIT {inboxOptions.Value.BatchSize}
+             LIMIT @BatchSize
              FOR UPDATE
              """;
 
         IEnumerable<InboxMessageResponse> inboxMessages = await connection.QueryAsync<InboxMessageResponse>(
             sql,
+            new { inboxOptions.Value.BatchSize },
             transaction: transaction);
 
         return inboxMessages.AsList();

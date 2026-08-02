@@ -7,6 +7,8 @@ public static class ApiResults
 {
     public static IResult Problem(Result result)
     {
+        ArgumentNullException.ThrowIfNull(result);
+
         if (result.IsSuccess)
         {
             throw new InvalidOperationException();

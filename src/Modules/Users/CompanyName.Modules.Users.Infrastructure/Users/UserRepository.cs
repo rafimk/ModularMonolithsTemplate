@@ -1,23 +1,18 @@
 using CompanyName.Modules.Users.Domain.Users;
+using CompanyName.Modules.Users.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CompanyName.Modules.Users.Infrastructure.Users;
 
-internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
+internal sealed class UserRepository(UsersDbContext dbContext) : IUserRepository
 {
-    public void Configure(EntityTypeBuilder<User> builder)
+    public async Task<User?> GetAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        builder.HasKey(u => u.Id);
+        return await dbContext.Users.FirstOrDefaultAsync(user => user.Id == id, cancellationToken);
+    }
 
-        builder.Property(u => u.FirstName).HasMaxLength(200);
-
-        builder.Property(u => u.LastName).HasMaxLength(200);
-
-        builder.Property(u => u.Email).HasMaxLength(300);
-
-        builder.HasIndex(u => u.Email).IsUnique();
-
-        builder.HasIndex(u => u.IdentityId).IsUnique();
+    public void Insert(User user)
+    {
+        dbContext.Users.Add(user);
     }
 }

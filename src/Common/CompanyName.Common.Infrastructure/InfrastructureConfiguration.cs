@@ -78,10 +78,7 @@ public static class InfrastructureConfiguration
 
             configure.SetKebabCaseEndpointNameFormatter();
 
-            configure.UsingInMemory((context, cfg) =>
-            {
-                cfg.ConfigureEndpoints(context);
-            });
+            configure.UsingInMemory((context, cfg) => cfg.ConfigureEndpoints(context));
         });
 
         services

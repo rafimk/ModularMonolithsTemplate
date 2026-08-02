@@ -6,9 +6,6 @@ using CompanyName.Common.Application;
 using CompanyName.Common.Infrastructure;
 using CompanyName.Common.Infrastructure.Configuration;
 using CompanyName.Common.Presentation.Endpoints;
-using CompanyName.Modules.Attendance.Infrastructure;
-using CompanyName.Modules.Events.Infrastructure;
-using CompanyName.Modules.Ticketing.Infrastructure;
 using CompanyName.Modules.Users.Infrastructure;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -25,10 +22,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerDocumentation();
 
 Assembly[] moduleApplicationAssemblies = [
-    CompanyName.Modules.Users.Application.AssemblyReference.Assembly,
-    CompanyName.Modules.Events.Application.AssemblyReference.Assembly,
-    CompanyName.Modules.Ticketing.Application.AssemblyReference.Assembly,
-    CompanyName.Modules.Attendance.Application.AssemblyReference.Assembly];
+    CompanyName.Modules.Users.Application.AssemblyReference.Assembly];
 
 builder.Services.AddApplication(moduleApplicationAssemblies);
 
@@ -37,11 +31,7 @@ string redisConnectionString = builder.Configuration.GetConnectionStringOrThrow(
 
 builder.Services.AddInfrastructure(
     DiagnosticsConfig.ServiceName,
-    [
-        EventsModule.ConfigureConsumers(redisConnectionString),
-        TicketingModule.ConfigureConsumers,
-        AttendanceModule.ConfigureConsumers
-    ],
+    [],
     databaseConnectionString,
     redisConnectionString);
 
@@ -52,15 +42,9 @@ builder.Services.AddHealthChecks()
     .AddRedis(redisConnectionString)
     .AddKeyCloak(keyCloakHealthUrl);
 
-builder.Configuration.AddModuleConfiguration(["users", "events", "ticketing", "attendance"]);
-
-builder.Services.AddEventsModule(builder.Configuration);
+builder.Configuration.AddModuleConfiguration(["users"]);
 
 builder.Services.AddUsersModule(builder.Configuration);
-
-builder.Services.AddTicketingModule(builder.Configuration);
-
-builder.Services.AddAttendanceModule(builder.Configuration);
 
 WebApplication app = builder.Build();
 
@@ -89,6 +73,6 @@ app.UseAuthorization();
 
 app.MapEndpoints();
 
-app.Run();
+await app.RunAsync();
 
 public partial class Program;

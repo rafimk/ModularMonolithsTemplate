@@ -12,13 +12,13 @@ public sealed class User : Entity
 
     public Guid Id { get; private set; }
 
-    public string Email { get; private set; }
+    public string Email { get; private set; } = null!;
 
-    public string FirstName { get; private set; }
+    public string FirstName { get; private set; } = null!;
 
-    public string LastName { get; private set; }
+    public string LastName { get; private set; } = null!;
 
-    public string IdentityId { get; private set; }
+    public string IdentityId { get; private set; } = null!;
 
     public IReadOnlyCollection<Role> Roles => _roles.ToList();
 

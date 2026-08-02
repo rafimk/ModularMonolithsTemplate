@@ -1,3 +1,3 @@
-namespace Evently.Common.Application.Authorization;
+namespace CompanyName.Common.Application.Authorization;
 
 public sealed record PermissionsResponse(Guid UserId, HashSet<string> Permissions);

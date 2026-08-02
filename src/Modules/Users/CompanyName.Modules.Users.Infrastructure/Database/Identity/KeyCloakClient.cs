@@ -21,12 +21,8 @@ internal sealed class KeyCloakClient(HttpClient httpClient)
     {
         const string usersSegmentName = "users/";
 
-        string? locationHeader = httpResponseMessage.Headers.Location?.PathAndQuery;
-
-        if (locationHeader is null)
-        {
-            throw new InvalidOperationException("Location header is null");
-        }
+        string locationHeader = httpResponseMessage.Headers.Location?.PathAndQuery
+            ?? throw new InvalidOperationException("Location header is null");
 
         int userSegmentValueIndex = locationHeader.IndexOf(
             usersSegmentName,

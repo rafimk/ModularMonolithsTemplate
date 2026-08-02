@@ -12,11 +12,6 @@ public abstract class BaseTest
     {
         T? domainEvent = entity.DomainEvents.OfType<T>().SingleOrDefault();
 
-        if (domainEvent is null)
-        {
-            throw new Exception($"{typeof(T).Name} was not published");
-        }
-
-        return domainEvent;
+        return domainEvent ?? throw new Exception($"{typeof(T).Name} was not published");
     }
 }

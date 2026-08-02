@@ -30,7 +30,7 @@ internal sealed class ProcessOutboxJob(
         logger.LogInformation("{Module} - Beginning to process outbox messages", ModuleName);
 
         await using DbConnection connection = await dbConnectionFactory.OpenConnectionAsync();
-        await using DbTransaction transaction = await connection.BeginTransactionAsync();
+        await using DbTransaction transaction = await connection.BeginTransactionAsync(context.CancellationToken);
 
         IReadOnlyList<OutboxMessageResponse> outboxMessages = await GetOutboxMessagesAsync(connection, transaction);
 
@@ -70,7 +70,7 @@ internal sealed class ProcessOutboxJob(
             await UpdateOutboxMessageAsync(connection, transaction, outboxMessage, exception);
         }
 
-        await transaction.CommitAsync();
+        await transaction.CommitAsync(context.CancellationToken);
 
         logger.LogInformation("{Module} - Completed processing outbox messages", ModuleName);
     }
@@ -87,12 +87,13 @@ internal sealed class ProcessOutboxJob(
              FROM users.outbox_messages
              WHERE processed_on_utc IS NULL
              ORDER BY occurred_on_utc
-             LIMIT {outboxOptions.Value.BatchSize}
+             LIMIT @BatchSize
              FOR UPDATE
              """;
 
         IEnumerable<OutboxMessageResponse> outboxMessages = await connection.QueryAsync<OutboxMessageResponse>(
             sql,
+            new { outboxOptions.Value.BatchSize },
             transaction: transaction);
 
         return outboxMessages.ToList();

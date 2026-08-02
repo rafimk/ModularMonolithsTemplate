@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using Evently.Common.Domain;
+using CompanyName.Common.Domain;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
@@ -27,7 +27,7 @@ internal sealed class RequestLoggingPipelineBehavior<TRequest, TResponse>(
         {
             logger.LogInformation("Processing request {RequestName}", requestName);
 
-            TResponse result = await next();
+            TResponse result = await next(cancellationToken);
 
             if (result.IsSuccess)
             {

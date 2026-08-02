@@ -1,6 +1,6 @@
 using System.Reflection;
-using Evently.Common.Application.Messaging;
-using Evently.Common.Domain;
+using CompanyName.Common.Application.Messaging;
+using CompanyName.Common.Domain;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
@@ -21,7 +21,7 @@ internal sealed class ValidationPipelineBehavior<TRequest, TResponse>(
 
         if (validationFailures.Length == 0)
         {
-            return await next();
+            return await next(cancellationToken);
         }
 
         if (typeof(TResponse).IsGenericType &&
@@ -35,7 +35,7 @@ internal sealed class ValidationPipelineBehavior<TRequest, TResponse>(
 
             if (failureMethod is not null)
             {
-                return (TResponse)failureMethod.Invoke(null, [CreateValidationError(validationFailures)]);
+                return (TResponse)failureMethod.Invoke(null, [CreateValidationError(validationFailures)])!;
             }
         }
         else if (typeof(TResponse) == typeof(Result))

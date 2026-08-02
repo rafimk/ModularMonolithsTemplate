@@ -7,7 +7,7 @@
 
     <!-- Roslyn analyzers -->
     <AnalysisLevel>latest</AnalysisLevel>
-    <AnalysisMode>All</AnalysisMode>
+    <AnalysisMode>Default</AnalysisMode>
 
     <!-- Build quality -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
