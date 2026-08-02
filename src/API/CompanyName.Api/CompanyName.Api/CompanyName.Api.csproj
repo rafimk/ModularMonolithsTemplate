@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <UserSecretsId>3b84b6cf-9038-4c95-a541-5f348d9c2511</UserSecretsId>
@@ -21,10 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Modules\Attendance\CompanyName.Modules.Attendance.Infrastructure\CompanyName.Modules.Attendance.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\Modules\Events\CompanyName.Modules.Events.Infrastructure\CompanyName.Modules.Events.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\Modules\Ticketing\CompanyName.Modules.Ticketing.Infrastructure\CompanyName.Modules.Ticketing.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\Modules\Users\CompanyName.Modules.Users.Infrastructure\CompanyName.Modules.Users.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Users\CompanyName.Modules.Users.Infrastructure\CompanyName.Modules.Users.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
