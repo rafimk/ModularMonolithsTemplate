@@ -13,6 +13,16 @@ internal sealed class UserRepository(UsersDbContext dbContext) : IUserRepository
 
     public void Insert(User user)
     {
+        // Role.Member/Role.Administrator are static singletons seeded via migration HasData, never
+        // queried through this DbContext, so EF treats them as new entities to insert unless attached.
+        foreach (Role role in user.Roles)
+        {
+            if (dbContext.Entry(role).State == EntityState.Detached)
+            {
+                dbContext.Set<Role>().Attach(role);
+            }
+        }
+
         dbContext.Users.Add(user);
     }
 }
