@@ -5,6 +5,9 @@ services:
     build:
       context: .
       dockerfile: src/API/CompanyName.Api/CompanyName.Api/Dockerfile
+    depends_on:
+      CompanyName.database:
+        condition: service_healthy
     ports:
       - 5000:8080
       - 5001:8081
@@ -20,6 +23,11 @@ services:
       - ./.containers/db:/var/lib/postgresql/data
     ports:
       - 5432:5432
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d CompanyName" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   CompanyName.identity:
     image: quay.io/keycloak/keycloak:26.5.1
