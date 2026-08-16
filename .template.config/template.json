@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "CompanyName",
+  "classifications": [ "Web API", "Modular Monolith", "DDD", "Clean Architecture" ],
+  "identity": "CompanyName.ModularMonolithTemplate",
+  "name": "Modular Monolith (.NET 10)",
+  "description": "A .NET 10 modular monolith solution: CQRS + MediatR, EF Core/Dapper per-module Postgres schemas, outbox/inbox integration events, Keycloak auth, and a full local Docker Compose stack.",
+  "shortName": "modular-monolith",
+  "sourceName": "CompanyName",
+  "preferNameDirectory": true,
+  "symbols": {
+    "DockerImageNameLower": {
+      "type": "generated",
+      "generator": "casing",
+      "parameters": {
+        "source": "name",
+        "toLower": true
+      },
+      "replaces": "companyname"
+    },
+    "UsersApiUserSecretsId": {
+      "type": "generated",
+      "generator": "guid",
+      "parameters": {
+        "defaultFormat": "D"
+      },
+      "replaces": "3b84b6cf-9038-4c95-a541-5f348d9c2511"
+    }
+  },
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "exclude": [
+            "**/[Bb]in/**",
+            "**/[Oo]bj/**",
+            "**/.vs/**",
+            "**/.vscode/**",
+            "**/.idea/**",
+            "**/.claude/**",
+            ".git/**",
+            ".template.config/**",
+            "**/.containers/**"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -8,17 +8,41 @@ A .NET 10 modular monolith **template**, based on the "Evently" reference archit
 original name remain in a few places: `Evently.Api.http`, `EventlyException.cs`, Serilog app name
 `Evently.Api`, Swagger title). The `Users` module is the only fully scaffolded module and acts as the
 reference implementation to copy when adding a new module. Solution/company naming uses `CompanyName.*`
-as a placeholder prefix — replace it when instantiating the template for a real project.
+as a single, consistently-cased placeholder token throughout the repo (namespaces, file/folder names,
+Docker service/container names, appsettings hostnames, the Keycloak realm) — the only deliberate exception
+is the Docker image tag (`companynameapi`), which is lowercased because Docker repository names must be.
+
+This repo is also a `dotnet new` template (`.template.config/template.json`, `sourceName: "CompanyName"`).
+Install it with `dotnet new install .` from the repo root, then scaffold an instance with
+`dotnet new modular-monolith -n YourCompanyName -o path/to/output` — this renames every `CompanyName.*`
+occurrence (files, folders, namespaces, Docker/Keycloak config), regenerates the API's `UserSecretsId`, and
+lowercases the Docker image tag automatically. `.claude/`, `bin/`, `obj/`, `.vs/`, `.git/` and
+`.containers/` are excluded from the generated output.
+
+Local dev stack: `docker compose up` builds the API image and starts Postgres, Keycloak (imports the
+`CompanyName` realm from `.files/CompanyName-realm-export.json` on first boot), Seq, Redis, and Jaeger. The
+HTTPS dev cert must be exported once per machine before the API container can bind 8081 — Visual Studio does
+this automatically on F5, but from the CLI you need to run it yourself:
+`dotnet dev-certs https -ep %APPDATA%\ASP.NET\Https\CompanyName.Api.pfx -p <password>` then
+`dotnet user-secrets set "Kestrel:Certificates:Default:Password" "<password>" --project src/API/CompanyName.Api/CompanyName.Api`.
 
 ## Known current-state issues
 
-`dotnet build CompanyName.slnx` succeeds end-to-end (verified; only NU1701/MSB3277 warnings remain, from
-`Microsoft.EntityFrameworkCore.Tools` pulling a slightly different EF patch version transitively in
-`IntegrationTests` — harmless, not worth chasing). One thing still open:
+`dotnet build CompanyName.slnx` succeeds end-to-end from a warm NuGet cache (only NU1701/MSB3277 warnings
+remain, from `Microsoft.EntityFrameworkCore.Tools` pulling a slightly different EF patch version transitively
+in `IntegrationTests` — harmless, not worth chasing). From a **cold** cache/clean clone, restoring
+`CompanyName.Modules.Users.IntegrationTests` currently fails with `NU1903` (`SSH.NET 2025.1.0` has a
+disclosed high-severity advisory, pulled in transitively via `Testcontainers`) — `TreatWarningsAsErrors` in
+`Directory.Build.props` turns that NuGet-audit warning into a hard build error. Not yet fixed; needs either
+a `SSH.NET`/`Testcontainers` version bump or an explicit audit suppression, someone's call to make.
 
-- `CompanyName.Modules.Users.ArchitectureTests` and `CompanyName.Modules.Users.IntegrationTests` are empty
-  stub projects — no NetArchTest rules and no actual integration tests written yet, despite
-  `NetArchTest.Rules` and `Testcontainers.*` being wired up and ready to use.
+Two things still open in `CompanyName.Modules.Users.ArchitectureTests`/`IntegrationTests`:
+
+- `ArchitectureTests` is an empty stub project — no NetArchTest rules written yet, despite
+  `NetArchTest.Rules` being wired up and ready to use.
+- `IntegrationTests` has an initial EF Core migration to build against now (`Database/Migrations/`,
+  previously missing entirely — the schema was never created), but still has no actual integration tests
+  written, despite `Testcontainers.*` being wired up and ready to use.
 
 `AnalysisMode` in `Directory.Build.props` is `Default` (not `All`) — it was dialed back deliberately because
 `All` turns on Design/Naming/Performance analyzer categories that fight this architecture's own patterns

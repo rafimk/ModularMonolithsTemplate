@@ -1,5 +1,5 @@
 services:
-  companyname.api:
+  CompanyName.api:
     image: ${DOCKER_REGISTRY-}companynameapi
     container_name: CompanyName.Api
     build:
@@ -9,7 +9,7 @@ services:
       - 5000:8080
       - 5001:8081
 
-  companyname.database:
+  CompanyName.database:
     image: postgres:17
     container_name: CompanyName.Database
     environment:
@@ -21,7 +21,7 @@ services:
     ports:
       - 5432:5432
 
-  companyname.identity:
+  CompanyName.identity:
     image: quay.io/keycloak/keycloak:26.5.1
     container_name: CompanyName.Identity
     command: start-dev --import-realm
@@ -37,7 +37,7 @@ services:
       - 9000:9000
     user: root # Required to set volume permissions
 
-  companyname.seq:
+  CompanyName.seq:
     image: datalust/seq:2025.2
     container_name: CompanyName.Seq
     environment:
@@ -47,14 +47,14 @@ services:
       - 5341:5341
       - 8081:80
 
-  companyname.redis:
+  CompanyName.redis:
     image: redis:latest
     container_name: CompanyName.Redis
     restart: always
     ports:
       - 6379:6379
 
-  companyname.jaeger:
+  CompanyName.jaeger:
     image: jaegertracing/all-in-one:latest
     container_name: CompanyName.Jaeger
     ports:
